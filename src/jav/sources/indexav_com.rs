@@ -1,46 +1,55 @@
-extern crate reqwest;
-extern crate select;
-
-use select::predicate::{Attr, Class, Name, Predicate};
+use async_trait::async_trait;
 
 use crate::jav::ds::AV;
-
+use crate::jav::sources::traits::{GetBrief, SearchByActress};
 use crate::{jav::sources::common::*, noexcept};
 
-static URL: &'static str = "https://indexav.com";
+const URL: &'static str = "https://indexav.com";
 
-pub async fn search_by_actress(actress: &str) -> Result<Vec<AV>, reqwest::Error> {
-    let url = format!("{}/actor/{}", URL, actress);
-    let body = reqwest::get(&url).await?.text().await?;
-    let soup = make_soup(body);
+pub struct IndexAV;
 
-    Ok(soup
-        .find(Class("video_column"))
-        .map(get_brief_from_card)
-        .collect())
+lazy_static! {
+    static ref CLIENT: reqwest::Client = reqwest::Client::new();
 }
 
-pub async fn get_brief(code: &str) -> Result<Option<AV>, reqwest::Error> {
-    let url = format!("{}/search?keyword={}", URL, code);
-    let body = reqwest::get(&url).await?.text().await?;
-    let soup = make_soup(body);
+#[async_trait]
+impl SearchByActress for IndexAV {
+    async fn search_by_actress(actress: String) -> Result<Vec<AV>, reqwest::Error> {
+        let url = format!("{}/actor/{}", URL, actress);
+        let body = CLIENT.get(&url).send().await?.text().await?;
+        let soup = make_soup(body);
 
-    let cards: Vec<Node> = soup.find(Class("card")).collect();
-
-    if cards.len() == 0 {
-        return Ok(None);
+        Ok(soup
+            .find(Class("video_column"))
+            .map(get_brief_from_card)
+            .collect())
     }
+}
 
-    if cards[0]
-        .text()
-        .contains("Sad, cannot find any video in database")
-    {
-        return Ok(None);
+#[async_trait]
+impl GetBrief for IndexAV {
+    async fn get_brief(code: String) -> Result<Option<AV>, reqwest::Error> {
+        let url = format!("{}/search?keyword={}", URL, code);
+        let body = reqwest::get(&url).await?.text().await?;
+        let soup = make_soup(body);
+
+        let cards: Vec<Node> = soup.find(Class("card")).collect();
+
+        if cards.len() == 0 {
+            return Ok(None);
+        }
+
+        if cards[0]
+            .text()
+            .contains("Sad, cannot find any video in database")
+        {
+            return Ok(None);
+        }
+
+        let result = get_brief_from_card(cards[0]);
+
+        Ok(Some(result))
     }
-
-    let result = get_brief_from_card(cards[0]);
-
-    Ok(Some(result))
 }
 
 fn get_brief_from_card(card: Node) -> AV {

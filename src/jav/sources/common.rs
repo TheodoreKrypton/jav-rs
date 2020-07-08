@@ -1,9 +1,11 @@
-extern crate html5ever;
-extern crate select;
-
-use select::document::Document;
-
+pub use async_trait::async_trait;
+use html5ever;
 use html5ever::tendril::StrTendril;
+pub use lazy_static::lazy_static;
+pub use reqwest;
+use select;
+use select::document::Document;
+pub use select::predicate::{Attr, Class, Name, Predicate};
 
 pub fn make_soup(html: String) -> Document {
     Document::from(StrTendril::from(html))
