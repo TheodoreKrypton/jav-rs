@@ -6,7 +6,7 @@ pub struct AVHelpMemoWiki;
 
 #[async_trait]
 impl GetAliases for AVHelpMemoWiki {
-    async fn get_aliases(name: String) -> Result<Vec<String>, reqwest::Error> {
-        Ok(vec![])
+    async fn get_aliases(actress: &String) -> Vec<String> {
+        vec![]
     }
 }

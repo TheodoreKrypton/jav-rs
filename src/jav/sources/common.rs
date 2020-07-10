@@ -39,6 +39,18 @@ pub fn wrap_string(s: &String) -> Option<String> {
     }
 }
 
+#[async_trait]
+pub trait ResponseText {
+    async fn rsp_text(self) -> Option<String>;
+}
+
+#[async_trait]
+impl ResponseText for reqwest::RequestBuilder {
+    async fn rsp_text(self) -> Option<String> {
+        Some(self.send().await.ok()?.text().await.ok()?)
+    }
+}
+
 #[macro_export]
 macro_rules! noexcept {
     ($x:expr) => {

@@ -1,8 +1,10 @@
 use async_trait::async_trait;
 
 use crate::jav::ds::AV;
-use crate::jav::sources::traits::{GetBrief, SearchByActress};
-use crate::{jav::sources::common::*, noexcept};
+use crate::{
+    jav::sources::{common::*, traits::*},
+    noexcept,
+};
 
 const URL: &'static str = "https://indexav.com";
 
@@ -14,41 +16,45 @@ lazy_static! {
 
 #[async_trait]
 impl SearchByActress for IndexAV {
-    async fn search_by_actress(actress: String) -> Result<Vec<AV>, reqwest::Error> {
+    async fn search_by_actress(actress: &String) -> Vec<AV> {
         let url = format!("{}/actor/{}", URL, actress);
-        let body = CLIENT.get(&url).send().await?.text().await?;
-        let soup = make_soup(body);
+        let body = CLIENT.get(&url).rsp_text().await;
+        match body {
+            Some(html) => {
+                let soup = make_soup(html);
 
-        Ok(soup
-            .find(Class("video_column"))
-            .map(get_brief_from_card)
-            .collect())
+                soup.find(Class("video_column"))
+                    .map(get_brief_from_card)
+                    .collect()
+            }
+            None => vec![],
+        }
     }
 }
 
 #[async_trait]
 impl GetBrief for IndexAV {
-    async fn get_brief(code: String) -> Result<Option<AV>, reqwest::Error> {
+    async fn get_brief(code: &String) -> Option<AV> {
         let url = format!("{}/search?keyword={}", URL, code);
-        let body = reqwest::get(&url).await?.text().await?;
+        let body = CLIENT.get(&url).rsp_text().await?;
         let soup = make_soup(body);
 
         let cards: Vec<Node> = soup.find(Class("card")).collect();
 
         if cards.len() == 0 {
-            return Ok(None);
+            return None;
         }
 
         if cards[0]
             .text()
             .contains("Sad, cannot find any video in database")
         {
-            return Ok(None);
+            return None;
         }
 
         let result = get_brief_from_card(cards[0]);
 
-        Ok(Some(result))
+        Some(result)
     }
 }
 
@@ -69,7 +75,10 @@ fn get_brief_from_card(card: Node) -> AV {
     res.title = h5.get_text();
     res.preview_img_url = noexcept!(Some(h5?.find(Name("a")).next()?.attr("rel")?.to_string()));
 
-    res.release_date = AV::date_from_string(card.find(Class("footer")).next().get_text());
+    res.release_date = card
+        .find(Class("footer"))
+        .next()
+        .and_then(|n| AV::strptime(n.as_text(), "%Y-%m-%d"));
 
     res
 }

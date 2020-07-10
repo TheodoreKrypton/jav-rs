@@ -1,10 +1,20 @@
-use crate::jav::ds::AV;
-use crate::jav::sources::traits::GetBrief;
-use crate::jav::sources::IndexAV;
+use crate::jav::{
+    ds::AV,
+    sources::{
+        traits::{ropt, GetBrief},
+        IndexAV, WarashiAsianPornstarsFr,
+    },
+};
 
-pub async fn get_brief(code: String) -> Option<AV> {
-    match IndexAV::get_brief(code).await {
-        Ok(av) => av,
-        Err(_) => None,
+use futures::try_join;
+
+pub async fn get_brief(code: &String) -> Option<AV> {
+    let result = try_join!(
+        // ropt(IndexAV::get_brief(code)),
+        ropt(WarashiAsianPornstarsFr::get_brief(code))
+    );
+    match result {
+        Ok(_) => None,
+        Err(r) => Some(r),
     }
 }

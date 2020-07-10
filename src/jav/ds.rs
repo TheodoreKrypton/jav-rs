@@ -4,8 +4,6 @@ extern crate serde;
 use chrono::NaiveDate;
 use serde::Serialize;
 
-const FORMAT: &'static str = "%Y-%m-%d";
-
 #[derive(Serialize, Debug)]
 pub struct AV {
     pub code: Option<String>,
@@ -17,7 +15,7 @@ pub struct AV {
 }
 
 impl AV {
-    pub fn new() -> AV {
+    pub fn new() -> Self {
         AV {
             code: None,
             video_url: None,
@@ -28,7 +26,7 @@ impl AV {
         }
     }
 
-    pub fn date_from_string(release_date: Option<String>) -> Option<NaiveDate> {
-        NaiveDate::parse_from_str(&release_date?, FORMAT).ok()
+    pub fn strptime(release_date: Option<&str>, format: &str) -> Option<NaiveDate> {
+        NaiveDate::parse_from_str(&release_date?, format).ok()
     }
 }
