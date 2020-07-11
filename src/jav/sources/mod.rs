@@ -1,5 +1,5 @@
 mod avgle_com;
-pub use avgle_com::Avgle;
+pub use avgle_com::AvgleCom;
 
 mod indexav_com;
 pub use indexav_com::IndexAV;
@@ -9,6 +9,9 @@ pub use avhelp_memo_wiki::AVHelpMemoWiki;
 
 mod warashi_asian_pornstars_fr;
 pub use warashi_asian_pornstars_fr::WarashiAsianPornstarsFr;
+
+mod javbus_com;
+pub use javbus_com::JavBusCom;
 
 mod common;
 

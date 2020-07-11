@@ -1,7 +1,7 @@
 use async_trait::async_trait;
 use futures::Future;
 
-use crate::jav::ds::AV;
+use crate::jav::ds::*;
 
 pub async fn rvec<T, F>(fut: F) -> Result<(), Vec<T>>
 where
@@ -48,4 +48,9 @@ pub trait GetAliases {
 #[async_trait]
 pub trait Translate2JP {
     async fn translate2jp(actress: &String) -> Option<String>;
+}
+
+#[async_trait]
+pub trait GetMagnets {
+    async fn get_magnets(code: &String) -> Vec<Magnet>;
 }

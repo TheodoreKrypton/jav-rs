@@ -2,10 +2,11 @@ pub use async_trait::async_trait;
 use html5ever;
 use html5ever::tendril::StrTendril;
 pub use lazy_static::lazy_static;
+pub use regex::{Regex, RegexSet};
 pub use reqwest;
 use select;
 use select::document::Document;
-pub use select::predicate::{Attr, Class, Name, Predicate};
+pub use select::predicate::{Attr, Class, Name, Predicate, Text};
 
 pub fn make_soup(html: String) -> Document {
     Document::from(StrTendril::from(html))
@@ -54,6 +55,6 @@ impl ResponseText for reqwest::RequestBuilder {
 #[macro_export]
 macro_rules! noexcept {
     ($x:expr) => {
-        (|| -> Option<String> { $x })()
+        (|| -> Option<&str> { $x })()
     };
 }

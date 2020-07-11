@@ -1,6 +1,4 @@
-use crate::jav::sources::common::*;
-use crate::jav::sources::traits::GetAliases;
-use reqwest;
+use crate::jav::sources::{common::*, traits::*};
 
 pub struct AVHelpMemoWiki;
 

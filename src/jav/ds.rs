@@ -30,3 +30,20 @@ impl AV {
         NaiveDate::parse_from_str(&release_date?, format).ok()
     }
 }
+
+#[derive(Serialize, Debug)]
+pub struct Magnet {
+    pub magnet: Option<String>,
+    pub description: Option<String>,
+    pub peers: Option<u32>,
+}
+
+impl Magnet {
+    pub fn new() -> Self {
+        Magnet {
+            magnet: None,
+            description: None,
+            peers: None,
+        }
+    }
+}

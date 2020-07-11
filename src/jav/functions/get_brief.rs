@@ -10,8 +10,8 @@ use futures::try_join;
 
 pub async fn get_brief(code: &String) -> Option<AV> {
     let result = try_join!(
-        // ropt(IndexAV::get_brief(code)),
-        ropt(WarashiAsianPornstarsFr::get_brief(code))
+        ropt(WarashiAsianPornstarsFr::get_brief(code)),
+        ropt(IndexAV::get_brief(code)),
     );
     match result {
         Ok(_) => None,

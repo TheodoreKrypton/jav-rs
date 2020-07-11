@@ -73,7 +73,9 @@ fn get_brief_from_card(card: Node) -> AV {
 
     let h5 = card.find(Class("title")).next();
     res.title = h5.get_text();
-    res.preview_img_url = noexcept!(Some(h5?.find(Name("a")).next()?.attr("rel")?.to_string()));
+    if let Some(preview_img_url) = noexcept!(h5?.find(Name("a")).next()?.attr("rel")) {
+        res.preview_img_url = Some(preview_img_url.to_string());
+    }
 
     res.release_date = card
         .find(Class("footer"))

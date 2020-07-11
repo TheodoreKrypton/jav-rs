@@ -47,7 +47,7 @@ fn get_name_in_card(name: &str, card: &Node) -> Option<String> {
     }
 
     // cache for parsing actress info later, None for no url
-    let url = noexcept!(Some(card.find(Name("a")).next()?.attr("href")?.to_string()));
+    let url = noexcept!(card.find(Name("a")).next()?.attr("href"));
     let detailed_url = format!("{}{}", URL, url.unwrap());
 
     ACTRESS_DETAIL_URL
@@ -90,9 +90,7 @@ impl GetBrief for WarashiAsianPornstarsFr {
 
         let mut result = AV::new();
 
-        if let Some(poster) = noexcept!(Some(
-            soup.find(Name("video")).next()?.attr("poster")?.to_string()
-        )) {
+        if let Some(poster) = noexcept!(soup.find(Name("video")).next()?.attr("poster")) {
             result.preview_img_url = Some(format!("{}{}", URL, poster));
         }
 

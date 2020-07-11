@@ -1,7 +1,7 @@
 use crate::jav::ds::AV;
 use crate::jav::sources::traits::SearchByCode;
-use crate::jav::sources::Avgle;
+use crate::jav::sources::AvgleCom;
 
 pub async fn search_by_code(code: &String) -> Option<AV> {
-    return Avgle::search_by_code(code).await;
+    return AvgleCom::search_by_code(code).await;
 }

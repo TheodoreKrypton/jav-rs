@@ -22,14 +22,14 @@ struct AvgleApiResponse {
     response: _Response,
 }
 
-pub struct Avgle;
+pub struct AvgleCom;
 
 lazy_static! {
     static ref CLIENT: reqwest::Client = reqwest::Client::new();
 }
 
 #[async_trait]
-impl SearchByCode for Avgle {
+impl SearchByCode for AvgleCom {
     async fn search_by_code(code: &String) -> Option<AV> {
         let url = format!("https://api.avgle.com/v1/search/{}/0?limit=1", code);
         let body = CLIENT.get(&url).rsp_text().await?;

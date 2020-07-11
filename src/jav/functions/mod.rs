@@ -12,3 +12,6 @@ pub use translate2jp::translate2jp;
 
 mod get_aliases;
 pub use get_aliases::get_aliases;
+
+mod get_magnets;
+pub use get_magnets::get_magnets;
