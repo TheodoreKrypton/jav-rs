@@ -1,5 +1,7 @@
-#![feature(async_closure)]
+#![feature(proc_macro_hygiene, decl_macro)]
 
+#[macro_use]
+extern crate rocket;
 extern crate serde_json;
 extern crate tokio;
 
@@ -9,8 +11,6 @@ use futures::executor::block_on;
 
 #[tokio::main]
 async fn main() {
-    // let av = block_on(jav::sources::indexav_com::search_by_actress("飯岡かなこ"));
-    // let av = block_on(jav::translate2jp(&("Arina Hashimoto".to_string())));
-    let av = block_on(jav::get_magnets(&"ABP-123".to_string()));
-    println!("{}", serde_json::to_string(&av).unwrap());
+    let avs = block_on(jav::get_newly_released(1));
+    println!("{:?}", avs);
 }

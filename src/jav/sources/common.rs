@@ -7,6 +7,12 @@ pub use reqwest;
 use select;
 use select::document::Document;
 pub use select::predicate::{Attr, Class, Name, Predicate, Text};
+pub use serde::Deserialize;
+
+pub use crate::{
+    jav::{ds::*, sources::traits::*},
+    noexcept,
+};
 
 pub fn make_soup(html: String) -> Document {
     Document::from(StrTendril::from(html))

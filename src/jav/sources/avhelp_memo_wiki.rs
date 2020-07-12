@@ -1,4 +1,4 @@
-use crate::jav::sources::{common::*, traits::*};
+use crate::jav::sources::common::*;
 
 pub struct AVHelpMemoWiki;
 

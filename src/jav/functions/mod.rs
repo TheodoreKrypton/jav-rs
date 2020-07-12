@@ -15,3 +15,6 @@ pub use get_aliases::get_aliases;
 
 mod get_magnets;
 pub use get_magnets::get_magnets;
+
+mod get_newly_released;
+pub use get_newly_released::get_newly_released;

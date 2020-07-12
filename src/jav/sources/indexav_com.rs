@@ -1,10 +1,4 @@
-use async_trait::async_trait;
-
-use crate::jav::ds::AV;
-use crate::{
-    jav::sources::{common::*, traits::*},
-    noexcept,
-};
+use crate::jav::sources::common::*;
 
 const URL: &'static str = "https://indexav.com";
 

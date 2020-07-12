@@ -54,3 +54,8 @@ pub trait Translate2JP {
 pub trait GetMagnets {
     async fn get_magnets(code: &String) -> Vec<Magnet>;
 }
+
+#[async_trait]
+pub trait GetNewlyReleased {
+    async fn get_newly_released(page: u32) -> Vec<AV>;
+}
